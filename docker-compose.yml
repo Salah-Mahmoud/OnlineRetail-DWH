@@ -1,0 +1,97 @@
+version: '3'
+
+x-spark-common: &spark-common
+  image: bitnami/spark:latest
+  volumes:
+    - ./jobs:/opt/bitnami/spark/jobs
+    - ./data:/opt/bitnami/spark/data
+    - ./jars:/opt/bitnami/spark/jars/postgresql-42.2.18.jar:/opt/bitnami/spark/jars/postgresql-42.2.18.jar
+  networks:
+    - code-with-yu
+  environment:
+    PYSPARK_PYTHON: /usr/bin/python3
+    PYSPARK_DRIVER_PYTHON: /usr/bin/python3
+  command: bash -c "/opt/bitnami/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077"
+  user: root
+
+x-airflow-common: &airflow-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - airflow.env
+  volumes:
+    - ./jobs:/opt/airflow/jobs
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./data:/opt/airflow/data
+  depends_on:
+    - postgres
+  networks:
+    - code-with-yu
+  environment:
+    PYSPARK_PYTHON: /usr/bin/python3
+    PYSPARK_DRIVER_PYTHON: /usr/bin/python3
+
+services:
+  spark-master:
+    <<: *spark-common
+    command: bash -c "apt-get update && apt-get install -y python3.11 && ln -s /usr/bin/python3.11 /usr/bin/python3 && /opt/bitnami/spark/bin/spark-class org.apache.spark.deploy.master.Master"
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    user: root
+
+  spark-worker:
+    <<: *spark-common
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_WORKER_CORES: 8
+      SPARK_WORKER_MEMORY: 8g
+    user: root
+
+  postgres:
+    image: postgres:14.0
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    networks:
+      - code-with-yu
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      - scheduler
+
+  scheduler:
+    <<: *airflow-common
+    command: bash -c "airflow db init && airflow db upgrade && airflow users create --username admin --firstname Salah --lastname Mahmoud --role Admin --email salah.mahmoud8889@gmail.com --password admin && airflow scheduler"
+    depends_on:
+      - postgres
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - code-with-yu
+
+networks:
+  code-with-yu:
+
+volumes:
+  postgres_data:
