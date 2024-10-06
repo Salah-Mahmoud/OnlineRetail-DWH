@@ -10,6 +10,8 @@ In this project, I built a containerized ETL pipeline that integrates Apache Spa
 - [Airflow DAG](#airflow-dag)
 - [Sample Data and Output](#sample-data-and-output)
 - [Future Enhancements](#future-enhancements)
+- [Notes](#notes)
+
 
 ## Architecture
 
@@ -130,6 +132,7 @@ CREATE TABLE SalesFact (
 - **`jobs/`**: Contains the PySpark scripts for transformations.
 - **`data/`**: Source CSV data files.
 - **`dags/`**: Airflow DAGs that manage the ETL process.
+- **`jars/`**: Contains JAR files, such as the Postgres JDBC driver, that are used by your PySpark jobs or Airflow DAGs for database connectivity or other additional functionalities.
 
 ## Airflow DAG
 
@@ -190,10 +193,16 @@ Once the ETL pipeline is successfully executed, you can query the data warehouse
 #### Promotion Dimension Table:
 | promotionid | promotionname                   | discountpercentage | promotiontype    | isactivepromotion |
 |-------------|---------------------------------|--------------------|------------------|-------------------|
-| 444917      | Implemented full-range time-frame!    | 30.24      | Seasonal  | True                       |
+| 444917      | Implemented full-range time-frame!    | 30.24      | Seasonal  | True                       |tr
 
 ## Future Enhancements
 
 - **Automate Data Quality Checks**: Add checks to ensure data consistency.
 - **Include Monitoring and Alerts**: Integrate with Airflow to send alerts if a task fails.
 - **Data Partitioning**: Partition large datasets for better performance.
+
+
+## Notes
+1. **Sample Data**: The data source provided is sample-only, generated using the `faker` library to make it easy to share and use for testing purposes.
+   
+2. **Postgres Connection**: While I used `psycopg2` to connect to Postgres, I found that using the JDBC connector with Spark is significantly faster for large-scale data processing tasks.
