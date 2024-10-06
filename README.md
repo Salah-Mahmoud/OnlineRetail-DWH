@@ -146,9 +146,6 @@ The Airflow Directed Acyclic Graph (DAG) orchestrates the entire ETL process:
 
 ### Sample Input Data
 
-Below is a sample of the input data used for the ETL process:
-
-|Below is a sample of the input data used for the ETL process:
 
 | FirstName | LastName | Email                    | PhoneNumber         | Address                                               | City         | State   | Country              | ZipCode | PreviousCity   | ProductName        | Category      | Price   | PreviousPrice | PurchaseDate | StoreName                 | StoreLocation                                    | StoreType   | OpeningDate | ManagerName      | PaymentType  | Provider  | PromotionName                         | DiscountPercentage | PromotionType | IsActivePromotion | QuantitySold | TotalSales | DiscountAmount | NetSales |
 |-----------|----------|--------------------------|---------------------|-------------------------------------------------------|--------------|---------|----------------------|---------|----------------|--------------------|---------------|---------|---------------|--------------|--------------------------|-------------------------------------------------|-------------|-------------|------------------|--------------|-----------|----------------------------------------|-------------------|---------------|------------------|--------------|------------|----------------|-----------|
