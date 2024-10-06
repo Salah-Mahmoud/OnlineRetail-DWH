@@ -99,7 +99,7 @@ CREATE TABLE SalesFact (
 );
 ```
 
-![DWH](DwhOnlineRetail.png)
+![DWH](DataWarehouse/DwhOnlineRetail.png)
 
 
 ## Setup Instructions
@@ -138,6 +138,9 @@ The Airflow Directed Acyclic Graph (DAG) orchestrates the entire ETL process:
 - **Stage data**: Extracts data from CSV files and stages it in the PostgreSQL database.
 - **Transformations**: Python tasks transform the data into structured tables like `CustomerDim`, `ProductDim`, and `SalesFact`.
 - **Load**: The final transformed data is loaded into the PostgreSQL data warehouse, populating the dimension and fact tables. This prepares the data for querying and analysis.
+
+![DWH](Airflow.png)
+
 
 ## Sample Data and Output
 
