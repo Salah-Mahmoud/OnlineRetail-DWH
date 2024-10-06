@@ -77,6 +77,28 @@ CREATE TABLE StoreDim (
   ManagerName VARCHAR(50)
 );
 ```
+### Payment Dimension Table
+```sql
+CREATE TABLE PaymentMethodDim (
+  PaymentMethodID SERIAL PRIMARY KEY, 
+  PaymentType VARCHAR(50) NOT NULL UNIQUE,  
+  Provider VARCHAR(50)
+);
+```
+
+### Promotion Dimension Table
+```sql
+CREATE TABLE PromotionDim (
+  PromotionID SERIAL PRIMARY KEY, 
+  PromotionName VARCHAR(100) NOT NULL UNIQUE, 
+  DiscountPercentage DECIMAL(5, 2),
+  PromotionType VARCHAR(50),
+  IsActivePromotion BOOLEAN DEFAULT TRUE  
+);
+);
+```
+
+
 
 ### Sales Fact Table
 ```sql
